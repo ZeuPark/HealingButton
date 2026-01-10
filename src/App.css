@@ -1,0 +1,114 @@
+.container {
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.question {
+  font-size: 1.6rem;
+  font-weight: 500;
+  margin-bottom: 3rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  width: 100%;
+}
+
+.emotion-btn {
+  background-color: var(--color-button);
+  border: none;
+  padding: 1.125rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 450;
+  color: var(--color-text);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  font-family: inherit;
+  letter-spacing: -0.01em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.emotion-btn:hover {
+  background-color: var(--color-button-hover);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.emotion-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-accent);
+}
+
+.comfort-message {
+  font-size: 1.2rem;
+  line-height: 2.2;
+  white-space: pre-line;
+  color: var(--color-text);
+  margin-bottom: 3.5rem;
+  letter-spacing: -0.01em;
+  font-weight: 400;
+  max-width: 320px;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  font-weight: 400;
+  cursor: pointer;
+  padding: 0.75rem 1.25rem;
+  transition: color 0.3s ease;
+  font-family: inherit;
+  border-radius: 8px;
+}
+
+.back-btn:hover {
+  color: var(--color-text);
+}
+
+.back-btn:focus {
+  outline: none;
+  color: var(--color-text);
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 1.5rem;
+  }
+
+  .section {
+    min-height: 360px;
+  }
+
+  .question {
+    font-size: 1.4rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .emotion-btn {
+    padding: 1rem 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  .comfort-message {
+    font-size: 1.1rem;
+    line-height: 2;
+    margin-bottom: 3rem;
+  }
+}

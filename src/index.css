@@ -1,0 +1,46 @@
+:root {
+  --color-bg: #faf8f5;
+  --color-bg-warm: #f5f0ea;
+  --color-text: #4a4543;
+  --color-text-muted: #9a918a;
+  --color-button: #ebe5dd;
+  --color-button-hover: #e0d8ce;
+  --color-accent: #d4c4b0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Pretendard Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-warm) 100%);
+  color: var(--color-text);
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-text);
+}

@@ -1,57 +1,141 @@
 import { useState, useCallback } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { messages, emotions } from './data/messages'
+import { steps } from './data/steps'
 import './App.css'
 
 function App() {
-  const [view, setView] = useState('question')
-  const [currentMessage, setCurrentMessage] = useState('')
+  const [currentStep, setCurrentStep] = useState(0)
+  const [answers, setAnswers] = useState({})
+  const [message, setMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [view, setView] = useState('steps') // 'steps' | 'loading' | 'message'
 
-  const getRandomMessage = useCallback((emotionId) => {
-    const emotionMessages = messages[emotionId]
-    const randomIndex = Math.floor(Math.random() * emotionMessages.length)
-    return emotionMessages[randomIndex]
-  }, [])
+  const handleOptionClick = useCallback(async (stepId, optionLabel) => {
+    const newAnswers = { ...answers, [stepId]: optionLabel }
+    setAnswers(newAnswers)
 
-  const handleEmotionClick = useCallback((emotionId) => {
-    const message = getRandomMessage(emotionId)
-    setCurrentMessage(message)
-    setView('message')
-  }, [getRandomMessage])
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1)
+    } else {
+      // 마지막 스텝 - API 호출
+      setView('loading')
+      setIsLoading(true)
+
+      try {
+        const response = await fetch('/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            emotion: newAnswers.emotion,
+            situation: newAnswers.situation,
+            desire: newAnswers.desire,
+          }),
+        })
+
+        if (!response.ok) throw new Error('API error')
+
+        const data = await response.json()
+        setMessage(data.message)
+        setView('message')
+      } catch (error) {
+        console.error('Error:', error)
+        setMessage('지금은 말이 잘 안 떠올라.\n그래도 네가 여기 온 건 알아.')
+        setView('message')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+  }, [answers, currentStep])
 
   const handleBack = useCallback(() => {
-    setView('question')
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1)
+    }
+  }, [currentStep])
+
+  const handleReset = useCallback(() => {
+    setCurrentStep(0)
+    setAnswers({})
+    setMessage('')
+    setView('steps')
   }, [])
+
+  const step = steps[currentStep]
+  const progress = ((currentStep) / steps.length) * 100
 
   return (
     <main className="container">
       <AnimatePresence mode="wait">
-        {view === 'question' ? (
+        {view === 'steps' && (
           <motion.section
-            key="question"
+            key={`step-${currentStep}`}
             className="section"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
           >
-            <h1 className="question">지금 무슨 느낌이야?</h1>
+            <div className="progress-bar">
+              <motion.div
+                className="progress-fill"
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.3 }}
+              />
+            </div>
+
+            <h1 className="question">{step.question}</h1>
+
             <div className="buttons">
-              {emotions.map((emotion) => (
+              {step.options.map((option) => (
                 <motion.button
-                  key={emotion.id}
+                  key={option.id}
                   className="emotion-btn"
-                  onClick={() => handleEmotionClick(emotion.id)}
+                  onClick={() => handleOptionClick(step.id, option.label)}
                   whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   transition={{ duration: 0.2 }}
                 >
-                  {emotion.label}
+                  {option.label}
                 </motion.button>
               ))}
             </div>
+
+            {currentStep > 0 && (
+              <motion.button
+                className="back-btn"
+                onClick={handleBack}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                이전으로
+              </motion.button>
+            )}
           </motion.section>
-        ) : (
+        )}
+
+        {view === 'loading' && (
+          <motion.section
+            key="loading"
+            className="section"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="loading">
+              <motion.div
+                className="loading-dot"
+                animate={{ opacity: [0.3, 1, 0.3] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+              <p className="loading-text">잠깐만</p>
+            </div>
+          </motion.section>
+        )}
+
+        {view === 'message' && (
           <motion.section
             key="message"
             className="section"
@@ -66,18 +150,18 @@ function App() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.8 }}
             >
-              {currentMessage}
+              {message}
             </motion.p>
             <motion.button
               className="back-btn"
-              onClick={handleBack}
+              onClick={handleReset}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.5 }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              돌아가기
+              처음으로
             </motion.button>
           </motion.section>
         )}

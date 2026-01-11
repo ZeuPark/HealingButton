@@ -27,9 +27,9 @@ export default async function handler(req, res) {
 
 ## 말투
 - 확신 없는 톤. 나도 잘 모르겠다는 느낌.
-- 짧게. 2~3줄. 최대 50자.
-- 문장 끝은 "~야", "~어", "~지", "~거야" 같은 편한 반말.
-- 줄바꿈으로 호흡 만들기.
+- 반드시 2줄. 절대 3줄 이상 금지.
+- 총 30자 이내. 짧을수록 좋아.
+- 문장 끝은 "~야", "~어", "~지" 같은 편한 반말.
 
 ## 좋은 예시
 "멍한 게 이상한 건 아니야.
@@ -79,7 +79,7 @@ export default async function handler(req, res) {
           ],
           generationConfig: {
             temperature: 0.8,
-            maxOutputTokens: 150,
+            maxOutputTokens: 60,
           },
         }),
       }

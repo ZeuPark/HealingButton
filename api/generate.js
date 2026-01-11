@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 - 응원 금지
 - 이모지 금지
 - 물음표로 끝나는 문장 금지
-- 입력으로 받은 키워드를 그대로 문장에 넣지 마. 은은하게 녹여.
+- 입력 키워드를 복붙하지 마. 하지만 그 감정의 분위기는 담아.
 
 ## 말투
 - 확신 없는 톤. 나도 잘 모르겠다는 느낌.
@@ -55,12 +55,9 @@ export default async function handler(req, res) {
 - "지금은 어렵겠지만 곧 좋아질 거야."
 - "네 감정은 valid해. 스스로를 돌봐줘."`;
 
-  const userPrompt = `[참고만 해, 그대로 쓰지 마]
-감정: ${emotion}
-상황: ${situation}
-원하는 것: ${desire}
+  const userPrompt = `이 사람은 지금 "${emotion}" 느낌이고, "${situation}" 상태야. "${desire}" 마음이래.
 
-위 맥락을 참고해서 짧은 말 한마디. 키워드 직접 언급하지 말고 은은하게.`;
+이 감정에 맞는 짧은 말 한마디 해줘. 위 단어들을 그대로 쓰지 말고, 그 분위기만 담아서.`;
 
   try {
     const response = await fetch(
@@ -79,7 +76,7 @@ export default async function handler(req, res) {
           ],
           generationConfig: {
             temperature: 0.8,
-            maxOutputTokens: 60,
+            maxOutputTokens: 80,
           },
         }),
       }
